@@ -3,7 +3,7 @@ import pygame
 
 class Player(Entity, Animated):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, pos, (8, 8), (6,11), z_pos = 10)
+        Entity.__init__(self, game, pos, (12, 8), (5,11), z_pos = 10)
         Animated.__init__(self, game.assets["player_sprite"])
         self.vel[0] = 2
         self.collide = True
@@ -15,42 +15,48 @@ class Player(Entity, Animated):
         self.tags.append("@Player")
         self.tags.append("#shadow")
         self.shadow_offset = (-6, 0)
+
     def update(self, scene):
         super().update(scene)
+        self.z_pos = (self.rect().bottom / 100)
         self.movements()
 
     def movements(self):
         self.stop = False
         keys = self.game.get_pressed()
-        if (keys[pygame.K_LEFT] and keys[pygame.K_RIGHT]) or (keys[pygame.K_UP] and keys[pygame.K_DOWN]):
+        mapped_key_move_left = keys[pygame.K_LEFT] or keys[pygame.K_a]
+        mapped_key_move_right = keys[pygame.K_RIGHT] or keys[pygame.K_d]
+        mapped_key_move_up = keys[pygame.K_UP] or keys[pygame.K_w]
+        mapped_key_move_down = keys[pygame.K_DOWN] or keys[pygame.K_s]
+        if (mapped_key_move_left and mapped_key_move_right) or (mapped_key_move_up and mapped_key_move_down):
             self.stop = True
-        elif (keys[pygame.K_DOWN] or keys[pygame.K_UP]) and keys[pygame.K_LEFT]:
+        elif (mapped_key_move_down or mapped_key_move_up) and mapped_key_move_left:
             self.dir = "left"
             self.flip = False
-        elif (keys[pygame.K_DOWN] or keys[pygame.K_UP]) and keys[pygame.K_RIGHT]:
+        elif (mapped_key_move_down or mapped_key_move_up) and mapped_key_move_right:
             self.dir = "right"
             self.flip = True
-        elif keys[pygame.K_UP]:
+        elif mapped_key_move_up:
             self.dir = "up"
-        elif keys[pygame.K_DOWN]:
+        elif mapped_key_move_down:
             self.dir = "down"
-        elif keys[pygame.K_LEFT]:
+        elif mapped_key_move_left:
             self.dir = "left"
             self.flip = False
-        elif keys[pygame.K_RIGHT]:
+        elif mapped_key_move_right:
             self.dir = "right"
             self.flip = True
-        if keys[pygame.K_UP]:
+        if mapped_key_move_up:
             self.go_up = True
-        if keys[pygame.K_DOWN]:
+        if mapped_key_move_down:
             self.go_up = False
-        self.vel = [(int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT]))*self.speed,(int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP]))*self.speed]
+        self.vel = [(int(mapped_key_move_right) - int(mapped_key_move_left))*self.speed,(int(mapped_key_move_down) - int(mapped_key_move_up))*self.speed]
         if self.stop : self.vel = [0, 0]
         if abs(self.vel[0]) == abs(self.vel[1]) != 0:
             self.vel[0] *= (1/1.41)
             self.vel[1] *= (1/1.41)
 
-        if (keys[pygame.K_DOWN] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP]) and not self.stop:
+        if (mapped_key_move_down or mapped_key_move_left or mapped_key_move_right or mapped_key_move_up) and not self.stop:
             self.move = True
         else:
             self.move = False
@@ -61,7 +67,7 @@ class Player(Entity, Animated):
 
     def animation_cycle(self):
         if self.move:
-            self.set_animation_speed(0.2)
+            self.set_animation_speed(0.3)
             if self.go_up:
                 self.set_animation(1)
             else:
