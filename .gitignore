@@ -1,3 +1,4 @@
 *.pyc
 scripts/__pycache__
 engine/__pycache__
+engine/context/__pycache__
