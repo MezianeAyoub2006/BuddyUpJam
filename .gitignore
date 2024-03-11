@@ -2,3 +2,7 @@
 scripts/__pycache__
 engine/__pycache__
 engine/context/__pycache__
+scripts/__pycache__/*
+engine/__pycache__/*
+engine/context/__pycache__/*
+*/__pycache__/*
