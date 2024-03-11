@@ -49,6 +49,20 @@ def zoom(event):
     if scale:
         game_context.zoom *= 1 + event.y/70
 
+def check_player_out_of_bounds(playerObject):
+    x = playerObject.rect().left
+    y = playerObject.rect().top
+    #game_context.set_caption("x: "+str(x)+" y: "+str(y))
+
+def update_window_title(playerObject):
+    if playerObject is None:
+        game_context.set_caption("FPS : "+str(int(game_context.get_fps())))
+    else:
+        x = playerObject.rect().left
+        y = playerObject.rect().top
+        game_context.set_caption("FPS : "+str(int(game_context.get_fps()))+"x: "+str(x)+" y: "+str(y))
+    
+
 def game_loop():
     game_context.rendered_objects = 0
     for event in pygame.event.get():
@@ -58,9 +72,10 @@ def game_loop():
             zoom(event)
     game_context.rendering_surface.fill((0,0,0))
     scene.update()
-    game_context.set_caption("FPS : "+str(int(game_context.get_fps())))
     player = scene.get_objects_by_tags("@Player")[0]
+    update_window_title(player)
     game_context.scroll(player.rect().center, 15)
+    check_player_out_of_bounds(player)
     timer.update()
 
 init()
