@@ -3,7 +3,7 @@ import pygame
 
 class Player(Entity, Animated):
     def __init__(self, game, pos):
-        Entity.__init__(self, game, pos, (8, 8), (6,11), z_pos = 10)
+        Entity.__init__(self, game, pos, (12, 8), (5,11), z_pos = 10)
         Animated.__init__(self, game.assets["player_sprite"])
         self.vel[0] = 2
         self.collide = True
@@ -15,8 +15,10 @@ class Player(Entity, Animated):
         self.tags.append("@Player")
         self.tags.append("#shadow")
         self.shadow_offset = (-6, 0)
+
     def update(self, scene):
         super().update(scene)
+        self.z_pos = (self.rect().bottom / 100)
         self.movements()
 
     def movements(self):
@@ -61,7 +63,7 @@ class Player(Entity, Animated):
 
     def animation_cycle(self):
         if self.move:
-            self.set_animation_speed(0.2)
+            self.set_animation_speed(0.3)
             if self.go_up:
                 self.set_animation(1)
             else:
