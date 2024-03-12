@@ -1,10 +1,15 @@
+import asyncio # for main menu proc
 from engine import * 
 from scripts import *
+
+SCREEN_RESOLUTION_W = 1280
+SCREEN_RESOLUTION_H = 720
+
 
 def init():
     global game_context, scene, timer
     set_path("data/images/")
-    game_context = GameContext((1280, 720), pygame.SCALED, vsync=True)
+    game_context = GameContext((SCREEN_RESOLUTION_W, SCREEN_RESOLUTION_H), pygame.SCALED, vsync=True)
     game_context.zoom_enabled = True
     game_context.zoom = game_context.get_display_size()[1]/220
     game_context.tile_size = 32
@@ -78,6 +83,35 @@ def game_loop():
     check_player_out_of_bounds(player)
     timer.update()
 
-init()
-game_context.run(game_loop)
+mainmenu_fps_clock = pygame.time.Clock()
+async def mainmenu():
+    pygame.init()
+    screensize = (SCREEN_RESOLUTION_W, SCREEN_RESOLUTION_H)
+    screen = pygame.display.set_mode(screensize)
+    pygame.font.init()
+    my_font = pygame.font.SysFont('Comic Sans MS', 30)
+    text_surface = my_font.render('CurseBreaker', False, (220, 0, 0))
+    countdown = 60 # 60 seconds of title screen, we can change it
+    while True:
+        #print(f"{countdown}: mainmenu")
+        #game_context.rendering_surface.blit(text_surface, (0,0))
+        #scene.update()
+        screen.blit(text_surface, ((SCREEN_RESOLUTION_W/2)-text_surface.get_width()/2,SCREEN_RESOLUTION_H/2))
+        pygame.display.update()
+        
+        await asyncio.sleep(0) #yield cpu / play nice with threads
+        if not countdown:
+            pygame.quit() #quit so that we can re-init again
+            ###########################
+            # ORIGINAL LAUNCH GAME CODE
+            init()
+            game_context.run(game_loop)
+            ###########################
+            return
+        countdown -= 1
+        mainmenu_fps_clock.tick(60) #60 fps in the main menu
+
+#pygbab recommend to use this kind of asyncio thing, not sure if important
+asyncio.run(mainmenu())
+
 
