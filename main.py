@@ -92,7 +92,7 @@ async def mainmenu():
     my_font = pygame.font.SysFont('Comic Sans MS', 30)
     text_surface = my_font.render('CurseBreaker', False, (220, 0, 0))
     imp = pygame.image.load("data/images/backgrounds/ai_gen_titlescreen.jpg").convert()
-    countdown = 120 # 60 seconds of title screen, we can change it
+    countdown = 30 # 1/2 seconds of title screen (for testing?), we can change it later
     while True:
         #print(f"{countdown}: mainmenu")
         #game_context.rendering_surface.blit(text_surface, (0,0))
