@@ -89,7 +89,7 @@ async def mainmenu():
     screensize = (SCREEN_RESOLUTION_W, SCREEN_RESOLUTION_H)
     screen = pygame.display.set_mode(screensize)
     pygame.font.init()
-    my_font = pygame.font.SysFont('Comic Sans MS', 30)
+    my_font = pygame.font.SysFont('Comic Sans MS', 60)
     countdown_font = pygame.font.SysFont('Comic Sans MS', 15)
     text_surface = my_font.render('CurseBreaker', False, (220, 0, 0))
     imp = pygame.image.load("data/images/backgrounds/ai_gen_titlescreen.jpg").convert()
