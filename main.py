@@ -90,27 +90,31 @@ async def mainmenu():
     screen = pygame.display.set_mode(screensize)
     pygame.font.init()
     my_font = pygame.font.SysFont('Comic Sans MS', 30)
+    countdown_font = pygame.font.SysFont('Comic Sans MS', 15)
     text_surface = my_font.render('CurseBreaker', False, (220, 0, 0))
     imp = pygame.image.load("data/images/backgrounds/ai_gen_titlescreen.jpg").convert()
-    countdown = 30 # 1/2 seconds of title screen (for testing?), we can change it later
+    autostart_countdown = 90 # 1/2 seconds of title screen (for testing?), we can change it later
     while True:
-        #print(f"{countdown}: mainmenu")
+        #print(f"{autostart_countdown}: mainmenu")
         #game_context.rendering_surface.blit(text_surface, (0,0))
         #scene.update()
-        screen.blit(imp, (0, 0))
-        screen.blit(text_surface, ((SCREEN_RESOLUTION_W/2)-text_surface.get_width()/2,SCREEN_RESOLUTION_H/2))
-        pygame.display.update()
+        screen.fill((0,0,0)) # clear screen
+        screen.blit(imp, (0, 0)) # draw title image
+        screen.blit(text_surface, ((SCREEN_RESOLUTION_W/2)-text_surface.get_width()/2,SCREEN_RESOLUTION_H/2)) # draw title text
+        countdown_sequence = countdown_font.render(f"Starting in {round(autostart_countdown/60)} ....",False,(240,120,120)) # render countdown
+        screen.blit(countdown_sequence, (1000,600)) #draw countdown
+        pygame.display.update() #update display
         
         await asyncio.sleep(0) #yield cpu / play nice with threads
-        if not countdown:
+        if not autostart_countdown:
             pygame.quit() #quit so that we can re-init again
-            ###########################
-            # ORIGINAL LAUNCH GAME CODE
-            init()
-            game_context.run(game_loop)
-            ###########################
+            ############################
+            # ORIGINAL LAUNCH GAME CODE#
+            init()                     #
+            game_context.run(game_loop)#
+            ############################
             return
-        countdown -= 1
+        autostart_countdown -= 1
         mainmenu_fps_clock.tick(60) #60 fps in the main menu
 
 #pygbab recommend to use this kind of asyncio thing, not sure if important
